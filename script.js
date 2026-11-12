@@ -18,6 +18,7 @@
   const VEND = .92;
   const LABELS = ['Aerial survey','Ultrasonic testing','Radiographic testing','Magnetic particle','Phased array & TOFD','Rope access','Our people'];
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const MOBILE = matchMedia('(max-width: 760px)').matches;  // phones: poster only, no video
 
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const sm = t => { t = clamp(t); return t * t * (3 - 2 * t); };
@@ -103,10 +104,15 @@
   video.pause();
   video.addEventListener('loadeddata', () => { if (!fb) { video.classList.add('ready'); video.pause(); onScroll(); } });
   video.addEventListener('error', goFallback, true);
-  video.querySelectorAll('source').forEach(s => s.addEventListener('error', () => { if (s === video.lastElementChild) goFallback(); }));
 
-  // iOS Safari only allows seeking after one user-gesture play/pause
-  addEventListener('touchstart', () => { video.play().then(() => video.pause()).catch(() => {}); }, { once: true, passive: true });
+  if (!MOBILE) {
+    // desktop / tablet only: load the 1080p scrub video
+    video.preload = 'auto';
+    video.src = video.dataset.src;
+    video.load();
+    // iOS Safari (iPad) only allows seeking after one user-gesture play/pause
+    addEventListener('touchstart', () => { video.play().then(() => video.pause()).catch(() => {}); }, { once: true, passive: true });
+  }
 
   dots.forEach((d, i) => d.addEventListener('click', () => {
     const y = sv.offsetTop - pinTop() + (B[i] + .012) * range();
@@ -191,7 +197,10 @@
   const pre = document.getElementById('pre'), v = document.getElementById('heroVideo');
   if (!pre) return;
   const ring = document.getElementById('preRing'), num = document.getElementById('preN'), txt = document.getElementById('preT');
-  const MIN = matchMedia('(prefers-reduced-motion: reduce)').matches ? 500 : 2400, MAX = 7000, C = 590.6;
+  const MOBILE = matchMedia('(max-width: 760px)').matches;
+  const MIN = MOBILE ? 1500 : matchMedia('(prefers-reduced-motion: reduce)').matches ? 500 : 2400, MAX = MOBILE ? 4000 : 9000, C = 590.6;
+  let posterOk = !MOBILE;
+  if (MOBILE) { const im = new Image(); im.onload = im.onerror = () => { posterOk = true; }; im.src = 'assets/hero-poster-mobile.jpg'; }
   const root = document.documentElement, t0 = performance.now();
   root.classList.add('lock');
   let shown = 0, over = false;
@@ -201,7 +210,7 @@
   };
   function frame(now) {
     const el = now - t0, timeP = Math.min(1, el / MIN);
-    const target = el > MAX ? 1 : Math.min(timeP, loaded() || (v.readyState >= 3 ? timeP : timeP * .85));
+    const target = el > MAX ? 1 : MOBILE ? Math.min(timeP, posterOk ? 1 : .85) : Math.min(timeP, loaded() || (v.readyState >= 3 ? timeP : timeP * .85));
     shown += (target - shown) * .12;
     if (target >= 1 && 1 - shown < .004) shown = 1;
     const p = Math.round(shown * 100);

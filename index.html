@@ -42,10 +42,8 @@
 <!-- HERO: video time follows scroll. 7 shots = 7 text scenes -->
 <section class="sv" id="home">
   <div class="sv__stage">
-    <video class="sv__video" id="heroVideo" muted playsinline preload="auto" disablepictureinpicture poster="assets/hero-poster.jpg">
-      <source src="assets/hero-mobile.mp4" media="(max-width: 700px)" type="video/mp4">
-      <source src="assets/hero.mp4" type="video/mp4">
-    </video>
+    <!-- Video is attached by script.js on screens > 760px only; phones get the poster (no video download) -->
+    <video class="sv__video" id="heroVideo" muted playsinline preload="none" disablepictureinpicture poster="assets/hero-poster.jpg" data-src="assets/hero.mp4"></video>
     <div class="sv__shade"></div><div class="sv__bar sv__bar--t"></div><div class="sv__bar sv__bar--b"></div>
     <div class="sv__hud"><b id="svNum">01 / 07</b><i></i><span id="svLabel">Aerial survey</span></div>
     <div class="sv__scenes">
@@ -94,9 +92,23 @@
 
 <section class="trust">
   <div class="container grid-3">
-    <article><h3>Certified inspectors</h3><p>Level II and III personnel certified to ASNT, PCN or ISO 9712 for every method we offer.</p></article>
-    <article><h3>Code-compliant reports</h3><p>Procedures aligned to ASME, API, AWS and ISO, with traceable, audit-ready reporting.</p></article>
-    <article><h3>24x7 shutdown support</h3><p>Mobilised crews and mobile labs ready for turnarounds and emergency call-outs.</p></article>
+   <article>
+    <h3>Certified inspectors</h3>
+    <p>Level II and III personnel certified to ASNT, PCN or ISO 9712 for every method we offer. Experienced professionals delivering accurate inspections across critical industrial assets.</p>
+    <p>Skilled teams committed to quality, safety and international inspection standards.</p>
+</article>
+
+<article>
+    <h3>Code-compliant reports</h3>
+    <p>Procedures aligned to ASME, API, AWS and ISO, with traceable, audit-ready reporting. Detailed inspection records with clear findings, measurements and defect documentation.</p>
+    <p>Reliable reporting that supports compliance, quality assurance and informed decisions.</p>
+</article>
+
+<article>
+    <h3>24x7 shutdown support</h3>
+    <p>Mobilised crews and mobile labs ready for turnarounds and emergency call-outs. Rapid deployment to minimise operational delays and inspection downtime.</p>
+    <p>Flexible workforce coverage for demanding shutdown schedules and critical projects.</p>
+</article>
   </div>
 </section>
 
